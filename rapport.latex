@@ -1,0 +1,109 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{hyperref}
+\geometry{margin=1in}
+
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codeblue}{rgb}{0.2,0.2,0.8}
+\definecolor{backcolor}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolor},   
+    commentstyle=\color{codegray},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codeblue},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+    \Huge
+    \textbf{Rapport de Projet Java}
+    
+    \vspace{0.5cm}
+    \LARGE
+    Conception et Analyse
+    
+    \vspace{1.5cm}
+    \textbf{EL MARKHI IMANE }
+    
+    \vfill
+    
+    Rapport soumis dans le cadre du cours \\
+    [JAVA avancée]\\
+    \vspace{0.8cm}
+    \today
+    
+\end{titlepage}
+
+\section*{Résumé}
+Ce rapport présente la conception et la mise en œuvre d’un projet en Java pour la gestion des employés. Il décrit les objectifs, les étapes de développement, les défis rencontrés et les solutions apportées.
+
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+L’objectif de ce projet est de mettre en place un système facilitant la gestion des employés. Ce rapport détaille les méthodologies, outils et technologies utilisés lors du processus de développement.
+
+\section{Description du Projet}
+Le projet implémente un système de gestion des employés avec les fonctionnalités suivantes :
+\begin{itemize}
+    \item Ajouter de nouveaux employés.
+    \item Afficher les informations des employés.
+    \item Mettre à jour et supprimer des enregistrements d’employés.
+\end{itemize}
+
+\section{Détails de l’Implémentation}
+Le projet a été réalisé en Java avec une base de données MySQL. Les outils et technologies utilisés sont :
+\begin{itemize}
+    \item Java SE pour la logique de l’application.
+    \item MySQL pour la gestion de la base de données.
+    \item Swing pour l’interface utilisateur graphique.
+\end{itemize}
+
+\subsection{Exemple de Code}
+\begin{lstlisting}[language=Java, caption=Méthode pour ajouter un employé]
+public void ajouterEmploye(String nom, String poste) {
+    String requete = "INSERT INTO employes (nom, poste) VALUES (?, ?)";
+    try (PreparedStatement stmt = connection.prepareStatement(requete)) {
+        stmt.setString(1, nom);
+        stmt.setString(2, poste);
+        stmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+\end{lstlisting}
+
+\section{Défis et Solutions}
+\subsection{Erreur de Base de Données}
+Une erreur significative rencontrée concernait l’absence de la table `employes`. Ce problème a été résolu en vérifiant que le schéma de la base de données était correctement importé et que l’application pointait vers la bonne base de données.
+
+
+\section{Conclusion}
+Ce projet a permis d’acquérir une expérience précieuse en développement Java et en intégration de bases de données. Les travaux futurs porteront sur l’amélioration des fonctionnalités et de l’interface utilisateur.
+
+
+\end{document}
