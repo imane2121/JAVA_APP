@@ -2,9 +2,14 @@ package Controller;
 
 import Model.EmployeModel;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import Model.Employe;
 import Model.Employe.Poste;
 import Model.Employe.Role;
 import View.EmployeView;
@@ -21,6 +26,10 @@ public class EmployeController {
 		this.view.afficherButton.addActionListener(e -> view.remplirTable(model.afficher()));
 		this.view.supprimerButton.addActionListener(e-> supprimer());
 		this.view.modifierButton.addActionListener(e-> modifierEmploye());
+		this.view.importerButton.addActionListener(e-> handleImport());
+		this.view.ExporterButton.addActionListener(e-> handleExport());
+
+
 	}
 
 
@@ -82,6 +91,36 @@ public class EmployeController {
 			view.afficherMessageSucces("Employe ajoute avec succes");
 		}else {
 			view.afficherMessageErreur("Echec de l'ajout");
+		}
+	}
+	private void handleImport() {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setFileFilter(new FileNameExtensionFilter("Fichiers CSV", "txt") );
+		
+		if(fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
+			try {
+				String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+				model.importData(filePath);
+				view.afficherMessageSucces("Importation réussie");
+			}catch(IOException e) {
+				view.afficherMessageSucces("Erreur lors de l'Importation:"+e.getMessage());
+			}
+		}
+	}
+	private void handleExport() {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setFileFilter(new FileNameExtensionFilter("Fichiers CSV", "csv") );
+		if(fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
+			try {
+			String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+			if(!filePath.toLowerCase().endsWith(".txt")) {
+				filePath +=".txt";
+			}
+			List<Employe> employe =model.afficher();
+			model.exportData(filePath,employe);
+			}catch(IOException e) {
+				view.afficherMessageErreur("Erreur lors de l'Importation:"+e.getMessage());
+			}
 		}
 	}
 

@@ -30,12 +30,13 @@ public class EmployeView extends JFrame {
 	private JTextField emailField = new JTextField();
 	private JTextField telephoneField = new JTextField();
 	private JTextField salaireField = new JTextField();
-	private JTextField idField = new JTextField();
 	
 	public JButton ajouterButton = new JButton("Ajouter");
 	public JButton modifierButton = new JButton("Modifier");
 	public JButton supprimerButton = new JButton("Supprimer");
 	public JButton afficherButton = new JButton("Afficher");
+	public JButton importerButton = new JButton("Importer");
+	public JButton ExporterButton = new JButton("Exporter");
 
 	
 	private DefaultTableModel tableModel = new DefaultTableModel (
@@ -105,6 +106,9 @@ public class EmployeView extends JFrame {
         pan4.add(modifierButton);
         pan4.add(supprimerButton);
         pan4.add(afficherButton);
+        pan4.add(importerButton);
+        pan4.add(ExporterButton);
+
 
 		
 	}

@@ -1,5 +1,7 @@
 package Model;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import DAO.EmployeDAOImpl;
@@ -53,5 +55,44 @@ public class EmployeModel {
 			,telephone ,salaire ,role ,poste);
 		dao.modifier(id, nvvEmploye);
 		return true;
+	}
+	
+	private boolean checkFileExists(File file) {
+		if(!file.exists()) {
+			throw new IllegalArgumentException("Le fichier n'existe pas:"+file.getPath());
+		}return true;
+	}
+	
+	private boolean checkIsFile(File file) {
+		if(!file.isFile()) {
+			throw new IllegalArgumentException("Le chemin spécifié n'est pas un fichier :"+file.getPath());
+		}
+		return true;
+	}
+	
+	private boolean checkIsReadable(File file) {
+		if(!file.canRead()) {
+			throw new IllegalArgumentException("Le fichier n'est pas lisible :"+file.getPath());
+
+		}
+		return true;
+	}
+	private boolean checkIsWritable(File file) {
+	    if (!file.canWrite()) {
+	        throw new IllegalArgumentException("Le fichier n'est pas inscriptible :" + file.getPath());
+	    }
+	    return true;
+	}
+
+	public void importData(String FileName) throws IOException {
+        File file = new File(FileName);
+        checkFileExists(file);
+        checkIsFile(file);
+        checkIsReadable(file);
+        dao.importData(FileName);
+    }
+	public void exportData(String FileName , List<Employe> data) throws IOException {
+		File file = new File(FileName);
+        dao.exportData(FileName,data);
 	}
 }

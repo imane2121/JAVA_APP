@@ -1,5 +1,10 @@
 package DAO;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,7 +15,7 @@ import Model.Employe;
 import Model.Employe.Poste;
 import Model.Employe.Role;
 
-public class EmployeDAOImpl implements GenericDAOI <Employe>{
+public class EmployeDAOImpl implements GenericDAOI <Employe> ,DataImportExport<Employe>{
 
 	@Override
 	public int ajouter(Employe employe) {
@@ -107,6 +112,61 @@ public class EmployeDAOImpl implements GenericDAOI <Employe>{
 		
 		
 	}
+	@Override
+	public void importData(String fileName) throws IOException {
+		String query ="INSERT INTO employes (nom , prenom , email , telephone , salaire , role_id , poste_id) VALUES "
+				+ "(?,?,?,?,?,"
+				+ "(SELECT id FROM roles WHERE nom = ?),"
+				+ "(SELECT id FROM postes WHERE nom = ?))";
+		try(BufferedReader reader = new BufferedReader(new FileReader(fileName));
+				PreparedStatement stmt = Connexion.getConnection().prepareStatement(query)){
+			
+				String line = reader.readLine();
+				while((line =reader.readLine()) !=null) {
+					String[] data =line.split(",");
+					if(data.length ==7) {
+						stmt.setString(1, data[0].trim());
+						stmt.setString(2, data[1].trim());
+						stmt.setString(3, data[2].trim());
+						stmt.setString(4, data[3].trim());
+						stmt.setString(5, data[4].trim());
+				        stmt.setString(6, data[5].trim());
+				        stmt.setString(7, data[6].trim()); 
+				        stmt.addBatch();
+					}
+				}
+					stmt.executeBatch();
+					System.out.println("Employees imported successfully!");
+				}catch(IOException| SQLException e) {
+					e.printStackTrace();
+				}
+		
+	}
+	
+	
+	@Override
+    public void exportData(String fileName, List<Employe> data) throws IOException {
+		System.out.println(""+fileName);
+     try(BufferedWriter writer =new BufferedWriter(new FileWriter(fileName))){
+         writer.write("nom, prenom, salaire, email, telephone, role, poste");
+         writer.newLine();
+         for(Employe employee : data){
+             String Line = String.format("%s,%s,%.2f,%s,%s,%s,%s",
+                     employee.getNom(),
+                     employee.getPrenom(),
+                     employee.getSalaire(),
+                     employee.getEmail(),
+                     employee.getTelephone(),
+                     employee.getRole().name(),
+                     employee.getPoste().name());
+             writer.write(Line);
+             writer.newLine();
+         }
+     }
+
+    }
+	
+	
 	
 	
 }
